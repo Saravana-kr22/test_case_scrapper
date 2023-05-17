@@ -25,7 +25,7 @@ The scraper also includes some options for customizing the output. For example, 
 
 **Credits** 
 
-This project was created by SAravana perumal K. The web scraper was built using the BeautifulSoup and Pandas libraries, which are maintained by the following developers:
+This project was created by Saravana perumal K. The web scraper was built using the BeautifulSoup and Pandas libraries, which are maintained by the following developers:
 
 - BeautifulSoup: Leonard Richardson 
 - Pandas: Wes McKinney
