@@ -2,7 +2,7 @@ from bs4 import BeautifulSoup
 from script.makehtml import file
 from script.diff import *
 from script.create_data import dict_
-from script.createtable import *
+from script.create_table import *
 import pandas as pd
 import openpyxl
 from openpyxl.styles import Font
@@ -131,7 +131,7 @@ def test(h1_tags):
 
 
 
-                                    column_widths = {'A': 10, 'B': 20, 'C': 20 ,'D':30,'E':30}  # Specify the column widths as desired
+                                    column_widths = {'A': 10, 'B': 20, 'C': 20 ,'D':40,'E':50}  # Specify the column widths as desired
 
                                     for column, width in column_widths.items():
                                                 new_sheet.column_dimensions[column].width = width
@@ -200,7 +200,8 @@ if __name__ == '__main__':
                 sheet1.column_dimensions[column].width = width
         workbook.save(filename)
 
-        new_data_dicts = dict_(h1_tags1)
+        #this part of the code is yet to develop
+        '''new_data_dicts = dict_(h1_tags1)
         old_data_dicts = dict_(h1_tags2)
 
         new_data_dicts_keys = list(new_data_dicts.keys())
@@ -224,12 +225,7 @@ if __name__ == '__main__':
                 # Iterate through each cell in the row
                         for cell in row:
                         # Apply text wrap formatting to the cell
-                                cell.alignment = Alignment(wrapText=True)
+                                cell.alignment = Alignment(wrapText=True)'''
         
 
         workbook.save(filename)
-
-
-
-
-
