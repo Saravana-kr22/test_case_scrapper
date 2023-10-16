@@ -254,14 +254,74 @@ def create_df(table):
     #print(data_dict)
     return(data_dict)
 
+def diff(existing_data, current_data):
+    nc = list(current_data.keys())
+    oc = list(existing_data.keys())
+
+    ac = list(set(nc).difference(set(oc)))
+    rc = list(set(oc).difference(set(nc)))
+    ctc = []
+    ntc =[]
+    rtc =[]
+
+    for cluster in nc:
+        if cluster in ac+rc:
+            continue
+        a = current_data[cluster]
+        b = existing_data[cluster]
+        if a == b:
+            print(f"No changes in {cluster} cluster")
+            continue
+        if len(a) == len(b):
+            for i in range(len(a)):
+                if a[i] == b[i]:
+                    print(f"{a[i]['Test Case ID']} has no change ")
+                else:
+                    ctc.append(a[i]['Test Case ID'])
+
+        elif len(a) >  len(b):
+            ntc.append(cluster) 
+
+        else:
+            rtc.append(cluster) 
+
+    return ({"addedcluster": ac, "removedcluster": rc, "chagedtc" : ctc, "addedtc" : ntc,"removedtc": rtc})
+
+def chan(dif, sheet):
+    c = []
+    if dif["addedcluster"]:
+        for i in dif["addedcluster"]:
+            c.append([today, i, "newly added cluster"])
+    if dif["removedcluster"]:
+        for i in dif["removedcluster"]:
+            c.append([today,i,"this cluster is removed"])
+    if dif["chagedtc"]:
+        for i in dif["chagedtc"]:
+            c.append([today,i,"this Testcase is modified"])
+    if dif["addedtc"]:
+        for i in dif["addedtc"]:
+            c.append([today,i,"new testcase is added to this cluster"])
+    if dif["removedtc"]:
+        for i in dif["removedtc"]:
+            c.append([today,i,"Testcase is removed from this cluster"])
+
+    if c:
+        for i in range(len(c)):
+            for j, value in enumerate(c[i]):
+                sheet.cell(row=i + 2, column=j + 1, value=value)
+    
+    return None
+
 
 if __name__ == '__main__':
 
         try:
             with open(json_filename, 'r') as json_file:
                 existing_data = json.load(json_file)
+                e = True
         except FileNotFoundError:
             existing_data = {}
+            e = False
 
         with open (app) as f:
             soup1 = BeautifulSoup(f, 'html.parser')
@@ -297,3 +357,14 @@ if __name__ == '__main__':
 
         with open(json_filename, 'w') as json_file:
             json.dump(current_data, json_file, indent=4)
+
+        if e:
+            dif = diff(existing_data, current_data)
+            if "changes" not in sheet_names:
+                sheet = workbook.create_sheet("changes")
+                sheet.append(["Date","Cluster/Testcase","Changes"])
+            else:
+                sheet = workbook["changes"]
+
+            chan(dif, sheet)
+            workbook.save(filename)
