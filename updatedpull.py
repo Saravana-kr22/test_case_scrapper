@@ -203,6 +203,7 @@ def tc_details (h1_tags,sheet1,a):
         else:
             for column, width in column_widths.items():
                 new_sheet.column_dimensions[column].width = width
+        
         for j in range(len(result)):
             testcase = tc_id(heads[j])
 
@@ -284,8 +285,10 @@ def diff(existing_data, current_data):
 
         else:
             rtc.append(cluster) 
+    dif = {}
+    dif = {"addedcluster": ac, "removedcluster": rc, "chagedtc" : ctc, "addedtc" : ntc,"removedtc": rtc}
 
-    return ({"addedcluster": ac, "removedcluster": rc, "chagedtc" : ctc, "addedtc" : ntc,"removedtc": rtc})
+    return (dif)
 
 def chan(dif, sheet):
     c = []
@@ -305,8 +308,11 @@ def chan(dif, sheet):
         for i in dif["removedtc"]:
             c.append([today,i,"Testcase is removed from this cluster"])
 
+    print (c)
+
     if c:
         for i in range(len(c)):
+            sheet.insert_rows(2)
             for j, value in enumerate(c[i]):
                 sheet.cell(row=i + 2, column=j + 1, value=value)
     
@@ -334,10 +340,10 @@ if __name__ == '__main__':
 
         print(len(h1_tags1))
         if "All_TC_Details" in sheet_names:
+            workbook.remove(workbook["All_TC_Details"])
+            workbook.create_sheet("All_TC_Details", 0)
             sheet1 = workbook["All_TC_Details"]
-            for row in sheet1.iter_rows():
-                for cell in row:
-                    cell.value = None
+
         else:
             sheet1 = workbook.active
             sheet1.title = "All_TC_Details"
@@ -360,11 +366,14 @@ if __name__ == '__main__':
 
         if e:
             dif = diff(existing_data, current_data)
+            print(dif)
             if "changes" not in sheet_names:
-                sheet = workbook.create_sheet("changes")
+
+                sheet = workbook.create_sheet("changes",1)
                 sheet.append(["Date","Cluster/Testcase","Changes"])
             else:
                 sheet = workbook["changes"]
 
             chan(dif, sheet)
-            workbook.save(filename)
+
+            workbook.save(filename)    
