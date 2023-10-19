@@ -261,7 +261,7 @@ def diff(existing_data, current_data):
 
     ac = list(set(nc).difference(set(oc)))
     rc = list(set(oc).difference(set(nc)))
-    ctc = []
+    ctc = {}
     ntc =[]
     rtc =[]
 
@@ -278,7 +278,25 @@ def diff(existing_data, current_data):
                 if a[i] == b[i]:
                     print(f"{a[i]['Test Case ID']} has no change ")
                 else:
-                    ctc.append(a[i]['Test Case ID'])
+                    c =[]
+                    #ctc.append(a[i]['Test Case ID'])
+                    keys = list(a[i].keys())
+                    for k in keys:
+                        if a[i][k] == b[i][k]:
+                            print(f"{a[i]['Test Case ID']} {k} has no change ")
+                        elif k == "Test Procedure":
+                            tp = list(a[i][k].keys())
+                            print(tp)
+
+                            for t in tp :
+                                if a[i][k][t] == b[i][k][t]:
+                                    print(f"{a[i]['Test Case ID']} {t} has no change ")
+                                else:
+                                        c.append(f"Testprocedure({t})")
+                        else:
+                            c.append(k)
+                    ctc[a[i]['Test Case ID']]   = c                  
+
 
         elif len(a) >  len(b):
             ntc.append(cluster) 
@@ -299,8 +317,10 @@ def chan(dif, sheet):
         for i in dif["removedcluster"]:
             c.append([today,i,"this cluster is removed"])
     if dif["chagedtc"]:
-        for i in dif["chagedtc"]:
-            c.append([today,i,"this Testcase is modified"])
+        keys = list(dif["chagedtc"].keys())
+        for k in keys:
+            for change in dif["chagedtc"][k]:
+                c.append([today,k,"this Testcase is modified", change])
     if dif["addedtc"]:
         for i in dif["addedtc"]:
             c.append([today,i,"new testcase is added to this cluster"])
@@ -311,9 +331,11 @@ def chan(dif, sheet):
     print (c)
 
     if c:
-        for i in range(len(c)):
+        print(len(c))
+        for h in range(len(c)):
             sheet.insert_rows(2)
-            for j, value in enumerate(c[i]):
+        for i in range(len(c)):
+            for j, value in enumerate(c[i]):                                                                                 
                 sheet.cell(row=i + 2, column=j + 1, value=value)
     
     return None
@@ -370,7 +392,7 @@ if __name__ == '__main__':
             if "changes" not in sheet_names:
 
                 sheet = workbook.create_sheet("changes",1)
-                sheet.append(["Date","Cluster/Testcase","Changes"])
+                sheet.append(["Date","Cluster/Testcase","Changes","Column"])
             else:
                 sheet = workbook["changes"]
 
