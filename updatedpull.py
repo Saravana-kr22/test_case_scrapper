@@ -308,25 +308,25 @@ def diff(existing_data, current_data):
 
     return (dif)
 
-def chan(dif, sheet):
+def chan(dif, sheet, version):
     c = []
     if dif["addedcluster"]:
         for i in dif["addedcluster"]:
-            c.append([today, i, "newly added cluster"])
+            c.append([today, version, i, "newly added cluster"])
     if dif["removedcluster"]:
         for i in dif["removedcluster"]:
-            c.append([today,i,"this cluster is removed"])
+            c.append([today,version, i,"this cluster is removed"])
     if dif["chagedtc"]:
         keys = list(dif["chagedtc"].keys())
         for k in keys:
             for change in dif["chagedtc"][k]:
-                c.append([today,k,"this Testcase is modified", change])
+                c.append([today,version, k,"this Testcase is modified", change])
     if dif["addedtc"]:
         for i in dif["addedtc"]:
-            c.append([today,i,"new testcase is added to this cluster"])
+            c.append([today,version, i,"new testcase is added to this cluster"])
     if dif["removedtc"]:
         for i in dif["removedtc"]:
-            c.append([today,i,"Testcase is removed from this cluster"])
+            c.append([today,version, i,"Testcase is removed from this cluster"])
 
     print (c)
 
@@ -356,6 +356,11 @@ if __name__ == '__main__':
             
         with open (main) as f:
             soup2 = BeautifulSoup(f, 'html.parser')
+
+        versiontag = soup1.find ('div', class_='details')
+        versiont = versiontag.find('span' id = "revnumber")
+        version = versiont.text
+
 
         h1_tags1 = soup1.find_all('h1', {'id': True}) 
         h1_tags2 = soup2.find_all('h1', {'id': True})
@@ -392,10 +397,10 @@ if __name__ == '__main__':
             if "changes" not in sheet_names:
 
                 sheet = workbook.create_sheet("changes",1)
-                sheet.append(["Date","Cluster/Testcase","Changes","Column"])
+                sheet.append(["Date"," commit","Cluster/Testcase","Changes","Column"])
             else:
                 sheet = workbook["changes"]
 
-            chan(dif, sheet)
+            chan(dif, sheet, version)
 
             workbook.save(filename)    
