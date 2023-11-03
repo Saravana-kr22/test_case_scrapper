@@ -337,6 +337,13 @@ def tpchan(dif, sheet, version):
         for i in range(len(c)):
             for j, value in enumerate(c[i]):                                                                                 
                 sheet.cell(row=i + 2, column=j + 1, value=value)
+
+    else:
+        sheet.insert_rows(2)
+        value = [today,version,"Nil", f"No changes on {today} ", "Nil"]
+        for i in range(0, 1):
+            for j, value in enumerate(value):                                                                                 
+                sheet.cell(row=i + 2, column=j + 1, value=value)
     
     return None
 
@@ -362,6 +369,13 @@ def tcchan(dif, sheet, version):
             sheet.insert_rows(2)
         for i in range(len(c)):
             for j, value in enumerate(c[i]):                                                                                 
+                sheet.cell(row=i + 2, column=j + 1, value=value)
+
+    else:
+        sheet.insert_rows(2)
+        value = [today,version,"Nil", f"No changes on {today} "]
+        for i in range(0, 1):
+            for j, value in enumerate(value):                                                                                 
                 sheet.cell(row=i + 2, column=j + 1, value=value)
     
     return None
@@ -433,10 +447,10 @@ if __name__ == '__main__':
             if "Test_Summary_Changes" not in sheet_names:
 
                 sheet = workbook.create_sheet("Test_Summary_Changes",1)
-                sheet.append(["Date"," commit","Cluster/Testcase","Changes","Column"])
+                sheet.append(["Date"," commit","Cluster/Testcase","Changes"])
             else:
                 sheet = workbook["Test_Summary_Changes"]
 
-            tcchan(dif, sheet, version)
+            tpchan(dif, sheet, version)
 
         workbook.save(filename)    
