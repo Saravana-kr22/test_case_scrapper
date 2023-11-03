@@ -437,6 +437,6 @@ if __name__ == '__main__':
             else:
                 sheet = workbook["Test_Summary_Changes"]
 
-            tpchan(dif, sheet, version)
+            tcchan(dif, sheet, version)
 
         workbook.save(filename)    
