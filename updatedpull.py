@@ -1,16 +1,15 @@
 from bs4 import BeautifulSoup
 import openpyxl
 from openpyxl import load_workbook
-from openpyxl.styles import Font, Alignment
 from joblib import Parallel, delayed
 import re
 import datetime
-import os
 import pandas as pd
 import json
 
 today = datetime.date.today().strftime('%Y-%m-%d')
 filename = f"test_plan_change.xlsx"
+
 
 
 try:
@@ -134,13 +133,6 @@ def tc_details (h_tag,a,s_h1):
         if h1 == "MCORE PICS Definition":
             return None
 
-        else:
-            h4t = h1_tag.find_next('h4', {'id': lambda x: x and x.startswith('_tc')})
-            h4 = h4t.text
-            
-            sn = tc_id(h4)
-            sh = re.search(r'-(.*?)-', sn)
-
 
         clus = []
 
@@ -185,23 +177,6 @@ def tc_details (h_tag,a,s_h1):
                     clus.append(d)
                     heads.append(headt)
 
-                
-        column_widths = {'A': 10, 'B': 20, 'C': 20 ,'D': 40,'E': 50}  # Specify the column widths as desired
-        '''if isinstance(new_sheet, list):
-            print(f"{sheet} is already exsit")
-        else:
-            for column, width in column_widths.items():
-                new_sheet.column_dimensions[column].width = width
-        
-        for j in range(len(result)):
-            testcase = tc_id(heads[j])
-           
-
-            n = sheet1.max_row
-
-            value = [n , cluster_name ,tcname , testcase , tp ]
-            print(value)
-            sheet1.append(value)'''
 
         return {cluster_name:clus}
 
@@ -536,7 +511,6 @@ if __name__ == '__main__':
                 input_data.append(a)
 
             results = Parallel(n_jobs=-1)(delayed(tc_details)(a, b, c) for a, b, c in input_data)
-            #print(results)
 
             for result in results:
                 if result is not None:
