@@ -19,8 +19,8 @@ except FileNotFoundError:
 
 sheet_names = workbook.sheetnames
 
-app = '/home/grl/Downloads/allclusters (3).html'
-main = '/home/grl/Downloads/index (4).html'
+app = '/home/grl/Downloads/allclusters (4).html'
+main = '/home/grl/Downloads/index (5).html'
 #app = '/home/grl/Downloads/Matter.Allclusters.Test.Plan.V1.2.html'
 #main = '/home/grl/Downloads/Matter.Core.Test.Plan.V1.2.html'
 
@@ -109,7 +109,6 @@ def tc_details (h_tag,a,s_h1):
             tag_text = tag.text
             if tag_text == h_tag:
                 h1_tag = tag
-                print(h1_tag)
             
         
         if s_h1:
@@ -122,7 +121,6 @@ def tc_details (h_tag,a,s_h1):
         else:
             second_h1 = False
 
-        print(123)
         h1 = h1_tag.text
         cluster_name =  h1.replace(' Cluster Test Plan', '') \
             .replace(' Cluster TestPlan', '') \
@@ -169,7 +167,6 @@ def tc_details (h_tag,a,s_h1):
                         if h5_tag.find_next('h1') == second_h1:
                             result.append(h5_tag)
                 
-                print (result)
                 heads =[]
                 for h5_tag in result:
                     h4_tag = h5_tag.find_previous('h5')
@@ -217,7 +214,6 @@ def create_df(table):
     data_dict = {}
     # convert the dataframe to dict
     data_dict = df.to_dict('list')
-    #print(data_dict)
     return(data_dict)
 
 def diff(existing_data, updated_data):
