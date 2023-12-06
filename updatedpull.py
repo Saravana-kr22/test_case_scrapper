@@ -19,8 +19,8 @@ except FileNotFoundError:
 
 sheet_names = workbook.sheetnames
 
-app = '/home/grl/Downloads/allclusters (4).html'
-main = '/home/grl/Downloads/index (5).html'
+app = '/home/grl/Downloads/allclusters (5).html'
+main = '/home/grl/Downloads/index (6).html'
 #app = '/home/grl/Downloads/Matter.Allclusters.Test.Plan.V1.2.html'
 #main = '/home/grl/Downloads/Matter.Core.Test.Plan.V1.2.html'
 
@@ -254,6 +254,13 @@ def diff(existing_data, updated_data):
                                     print(f"{a[i]['Test Case ID']} {t} has no change ")
                                 else:
                                         c.append(f"Testprocedure({t})")
+                        elif k == "Test Case Name":
+                            atci  = re.search(r'\[(.*?)\]\s*(.*)', a[i][k])
+                            atc ='[' + atci.group(1) + '] ' + atci.group(2)
+                            btci  = re.search(r'\[(.*?)\]\s*(.*)', b[i][k])
+                            btc ='[' + btci.group(1) + '] ' + btci.group(2)
+                            if atc != btc:
+                               c.append(k) 
                         else:
                             c.append(k)
                     ctc[a[i]['Test Case ID']]   = c                  
